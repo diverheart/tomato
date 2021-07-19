@@ -8,10 +8,18 @@ require('dotenv/config');
 
 
 
-mongoose.connect(process.env.MONGO_URL,
-    { useNewUrlParser: true, useUnifiedTopology: true }, err => {
-        console.log('mongoose connected')
-    });
+// mongoose.connect(process.env.MONGO_URL,
+//     { useNewUrlParser: true, useUnifiedTopology: true }, err => {
+//         console.log('mongoose connected')
+//     });
+
+(async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  } catch (err) {
+    console.log('error: ' + err)
+  }
+})()
 
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(express.static("public"));

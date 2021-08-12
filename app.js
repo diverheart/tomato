@@ -4,7 +4,7 @@ var bodyParser=require('body-parser')
 var mongoose=require('mongoose');
 var fs = require('fs');
 var path = require('path');
-// require('dotenv/config');
+require('dotenv/config');
 
 
 
@@ -18,23 +18,29 @@ var path = require('path');
     await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   } catch (err) {
     console.log('error: ' + err)
+    
   }
 })()
 
-app.use(bodyParser.urlencoded({ extended: false })); 
+
+
+app.use(express.json()); //Used to parse JSON bodies
+app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.use(express.static("public"));
-app.use(bodyParser.json())
+
 var Us=require('./model.js');
 
-app.post("/signup",function(req,res,next)
+app.post("/signup",function(req,res)
 {
-	//below code is storing the user credentials to the database
-	var Person =
-		{
-  	mail:req.body.mail,
-  
-  	password:req.body.pass
-      }
+	
+	const Person ={
+    mail:req.body.mail,
+    password:req.body.pass
+  }
+    
+
+      console.log(Person);
+    
       Us.create(Person,(err,item) =>
       {
         if(err)
@@ -92,7 +98,7 @@ app.post("/login",function(req,res)
 }
 
 else
-{
+{ 
 	res.redirect("/error")
 }
 
